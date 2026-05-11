@@ -1,0 +1,130 @@
+﻿@model Restaurant.Models.User
+
+@{
+    ViewData["Title"] = "Додати персонал";
+}
+
+<div class="container mt-5 page-transition">
+    @* Центруємо картку та задаємо ширину як у редагуванні страв *@
+    <div class="premium-card p-5 shadow-sm mx-auto" style="max-width: 700px; border-radius: 30px; background: #fff; border: 1px solid rgba(0,0,0,0.05);">
+
+        <h2 class="fw-bold mb-4" style="color: #2d3436; letter-spacing: -0.5px;">
+            Додати <span style="color: #ffb142;">персонал</span>
+        </h2>
+
+        <hr class="mb-4" style="opacity: 0.1;">
+
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+            <div class="row">
+                @* Логін *@
+                <div class="col-md-6">
+                    <div class="form-group mb-4">
+                        <label asp-for="Login" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Логін</label>
+                        <input asp-for="Login" class="form-control form-control-lg rounded-pill px-4"
+                               style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;" placeholder="Введіть логін" />
+                        <span asp-validation-for="Login" class="text-danger small ms-3"></span>
+                    </div>
+                </div>
+                @* Пароль *@
+                <div class="col-md-6">
+                    <div class="form-group mb-4">
+                        <label asp-for="Password" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Пароль</label>
+                        <input type="password" asp-for="Password" class="form-control form-control-lg rounded-pill px-4"
+                               style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;" placeholder="********" />
+                        <span asp-validation-for="Password" class="text-danger small ms-3"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                @* Ім'я *@
+                <div class="col-md-6">
+                    <div class="form-group mb-4">
+                        <label asp-for="FirstName" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Ім'я</label>
+                        <input asp-for="FirstName" class="form-control form-control-lg rounded-pill px-4"
+                               style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;" />
+                        <span asp-validation-for="FirstName" class="text-danger small ms-3"></span>
+                    </div>
+                </div>
+                @* Прізвище *@
+                <div class="col-md-6">
+                    <div class="form-group mb-4">
+                        <label asp-for="LastName" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Прізвище</label>
+                        <input asp-for="LastName" class="form-control form-control-lg rounded-pill px-4"
+                               style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;" />
+                        <span asp-validation-for="LastName" class="text-danger small ms-3"></span>
+                    </div>
+                </div>
+            </div>
+
+            @* Телефон *@
+            <div class="form-group mb-4">
+                <label asp-for="Phone" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Телефон</label>
+                <input pattern="^\+[0-9]{3}(\d+)\d{3}\d{2}\d{2}" placeholder="+380971234567" asp-for="Phone"
+                       class="form-control form-control-lg rounded-pill px-4"
+                       style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;" />
+                <span asp-validation-for="Phone" class="text-danger small ms-3"></span>
+            </div>
+
+            @* Аватар - ВИПРАВЛЕНО (додано висоту та відступи) *@
+            <div class="form-group mb-4">
+                <label asp-for="Avatar" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Аватар</label>
+                <input type="file" name="file" asp-for="Avatar" class="form-control rounded-pill px-4 py-2"
+                       style="border-color: #f1f1f1; background-color: #fafafa; min-height: 50px; line-height: 2.2;" />
+                <span asp-validation-for="Avatar" class="text-danger small ms-3"></span>
+            </div>
+
+            @* Роль *@
+            <div class="form-group mb-5">
+                <label asp-for="RoleID" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Роль</label>
+                <select asp-for="RoleID" class="form-select form-select-lg rounded-pill px-4"
+                        asp-items="ViewBag.RoleID" style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;"></select>
+            </div>
+
+            @* Кнопки *@
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-warning btn-lg rounded-pill px-5 fw-bold shadow-sm text-white"
+                        style="background-color: #ffb142; border: none;">
+                    Додати
+                </button>
+
+                @* Універсальний спосіб повернутися назад без помилки 404 *@
+                <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg rounded-pill px-5 fw-bold">
+                    Назад
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    .page-transition {
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #ffb142 !important;
+        box-shadow: 0 0 0 0.25rem rgba(255, 177, 66, 0.1) !important;
+        background-color: #fff !important;
+    }
+</style>

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Restaurant.Models.User>
+
+<div class="container-fluid px-4 mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold">
+            <i class="fa-solid fa-users-gear me-2"></i> @ViewData["Title"]
+        </h2>
+        <a asp-action="Create" class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm border-0">
+            <i class="fa-solid fa-plus me-1"></i> Додати
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark text-uppercase shadow-sm" style="font-size: 0.85rem;">
+                    <tr>
+                        <th class="ps-4 py-3">Профіль</th>
+                        <th>Телефон</th>
+                        <th>Логін / Роль</th>
+                        <th class="text-center py-3">Дії</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="position-relative">
+                                        <img src="@(string.IsNullOrEmpty(item.Avatar) ? "/img/default_avatar.png" : item.Avatar)"
+                                             class="rounded-circle border shadow-sm"
+                                             width="55" height="55" style="object-fit: cover;"
+                                             onerror="this.src='/img/manager_avatar.png'" />
+                                    </div>
+                                    <div class="ms-3">
+                                        <div class="fw-bold text-dark" style="font-size: 1.1rem;">@item.FirstName @item.LastName</div>
+                                        <small class="text-muted">ID: #@item.ID</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-secondary"><i class="fa-solid fa-phone-flip me-2 text-warning"></i>@item.Phone</span>
+                            </td>
+                            <td>
+                                <div class="mb-1"><span class="badge bg-light text-dark border px-2">@item.Login</span></div>
+                                <span class="badge @(item.Role?.Name == "Менеджер" ? "bg-danger" : "bg-info") text-white shadow-sm">
+                                    @(item.Role?.Name ?? "Співробітник")
+                                </span>
+                            </td>
+                            <td class="text-center pe-4">
+                                <div class="btn-group shadow-sm rounded">
+                                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-sm btn-white text-primary border" title="Редагувати">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-sm btn-white text-danger border" title="Видалити">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

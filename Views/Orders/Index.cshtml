@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Restaurant.Models.Order>
+
+@{
+    ViewData["Title"] = "Замовлення";
+}
+
+@* 1. БЛОК КЕРУВАННЯ ТА ФІЛЬТРАЦІЯ (Тільки для Менеджера) *@
+@if (User.Identity.IsAuthenticated && User.IsInRole("Менеджер"))
+{
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form asp-action="Index" method="get" class="p-3 border rounded bg-light shadow-sm d-flex align-items-end gap-2">
+                <div class="flex-grow-1">
+                    <label class="form-label small fw-bold">Виберіть дату замовлень:</label>
+                    <input type="date" name="SelectedDate" value="@ViewBag.SelectedDate" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-info fw-bold text-white">ПОКАЗАТИ</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Скинути</a>
+            </form>
+            <div class="mt-2 ms-1">
+                <strong>Прибуток за період: </strong>
+                <span class="text-success fw-bold">@ViewBag.Profit грн</span>
+            </div>
+        </div>
+    </div>
+    <hr />
+}
+
+@* 2. ТАБЛИЦЯ ЗАМОВЛЕНЬ *@
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="thead-light">
+                <tr>
+                    <th>№</th>
+                    @if (User.IsInRole("Менеджер") || User.IsInRole("Офіціант"))
+                    {
+                        <th>Клієнт</th>
+                    }
+                    <th>Офіціант</th>
+                    <th>Статус</th>
+                    <th>Столик</th>
+                    <th>Ціна</th>
+                    <th>Дата</th>
+                    <th></th> @* Колонка для кнопок (пуста, бо ми видалили Інформацію) *@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ID</td>
+
+                        @if (User.IsInRole("Менеджер") || User.IsInRole("Офіціант"))
+                        {
+                            <td>@(item.Client?.FullName ?? "Гість")</td>
+                        }
+
+                        @* ВІДОБРАЖЕННЯ ОФІЦІАНТА *@
+                        <td>
+                            @if (item.Waiter != null)
+                            {
+                                @item.Waiter.FullName
+                            }
+                            else if (item.Place?.Waiter != null)
+                            {
+                                @item.Place.Waiter.FullName
+                            }
+                            else
+                            {
+                                <span>—</span>
+                            }
+                        </td>
+
+                        <td>
+                            <span class="badge bg-info text-dark px-3 rounded-pill">
+                                @item.Status.Name
+                            </span>
+                        </td>
+                        <td>@item.Place?.Name</td>
+                        <td><strong>@item.Price грн</strong></td>
+                        <td class="small text-muted">@item.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    @* 3. ПОВІДОМЛЕННЯ, ЯКЩО ЗАМОВЛЕНЬ НЕМАЄ *@
+    <div class="alert alert-light border text-center py-5">
+        <h5 class="text-muted">Замовлень не знайдено</h5>
+        @if (User.IsInRole("Клієнт"))
+        {
+            <p class="mb-0">Перейдіть до меню, щоб зробити перше замовлення.</p>
+        }
+        else
+        {
+            <p class="mb-0">За вибраний період або для вашого профілю замовлень немає.</p>
+        }
+    </div>
+}

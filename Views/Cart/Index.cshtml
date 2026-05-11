@@ -1,0 +1,134 @@
+﻿@model List<Restaurant.Models.CartItem>
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0 rounded-3 p-4">
+        <h2 class="text-dark fw-bold mb-4">Ваше замовлення</h2>
+
+        @if (Model.Any())
+        {
+            <form asp-controller="Cart" asp-action="Checkout" method="post">
+                <div class="mb-4 col-md-4">
+                    <label class="form-label fw-bold">Оберіть столик:</label>
+                    <select name="placeId" class="form-select border-warning shadow-sm" asp-items="ViewBag.Places" required>
+                        <option value="">-- Оберіть номер --</option>
+                    </select>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Страва</th>
+                                <th>Ціна</th>
+                                <th class="text-center">Кількість</th>
+                                <th class="text-end">Сума</th>
+                                <th class="text-end"></th> @* Колонка для видалення *@
+                            </tr>
+                        </thead>
+                        <tbody id="cart-table-body">
+                            @foreach (var item in Model)
+                            {
+                                <tr id="row-@item.FoodID">
+                                    <td>@item.Name</td>
+                                    <td>@item.Price грн</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center align-items-center gap-2">
+                                            @* Кнопки зміни кількості *@
+                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle update-qty"
+                                                    data-id="@item.FoodID" data-delta="-1" style="width: 30px; height: 30px; padding: 0;">
+                                                -
+                                            </button>
+
+                                            <span id="qty-@item.FoodID" class="fw-bold px-2">@item.Quantity</span>
+
+                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle update-qty"
+                                                    data-id="@item.FoodID" data-delta="1" style="width: 30px; height: 30px; padding: 0;">
+                                                +
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="text-end fw-bold">
+                                        <span id="subtotal-@item.FoodID">@(item.Price * item.Quantity)</span> грн
+                                    </td>
+                                    <td class="text-end">
+                                        @* Кнопка повного видалення *@
+                                        <button type="button" class="btn btn-link text-danger remove-item" data-id="@item.FoodID">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="m-0">Разом: <span class="text-warning fw-bold"><span id="cart-total">@Model.Sum(x => x.Price * x.Quantity)</span> грн</span></h3>
+                    <button type="submit" class="btn btn-warning btn-lg px-5 rounded-pill fw-bold shadow">
+                        ПІДТВЕРДИТИ ЗАМОВЛЕННЯ
+                    </button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div id="empty-cart-msg" class="text-center py-5">
+                <i class="fa-solid fa-cart-shopping fa-3x text-muted mb-3"></i>
+                <p class="lead">Ваш кошик порожній.</p>
+                <a asp-controller="Foods" asp-action="Index" class="btn btn-warning rounded-pill px-4">До меню</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 1. Зміна кількості (+ або -)
+            $('.update-qty').click(function () {
+                var id = $(this).data('id');
+                var delta = $(this).data('delta');
+
+                $.post('/Cart/UpdateQuantity', { id: id, delta: delta }, function (data) {
+                    if (data.itemCount <= 0) {
+                        $('#row-' + id).fadeOut(300, function () { $(this).remove(); checkEmpty(); });
+                    } else {
+                        $('#qty-' + id).text(data.itemCount);
+                        $('#subtotal-' + id).text(data.itemSubtotal);
+                    }
+                    updateGlobalUI(data);
+                });
+            });
+
+            // 2. Повне видалення рядка
+            $('.remove-item').click(function () {
+                var id = $(this).data('id');
+
+                $.post('/Cart/RemoveFromCart', { id: id }, function (data) {
+                    $('#row-' + id).fadeOut(300, function () { $(this).remove(); checkEmpty(); });
+                    updateGlobalUI(data);
+                });
+            });
+
+            // Оновлення підсумків та бейджа в хедері
+            function updateGlobalUI(data) {
+                $('#cart-total').text(data.total);
+                var badge = $('#cart-badge');
+                if (badge.length) {
+                    badge.text(data.count);
+                    if (data.count <= 0) badge.addClass('d-none');
+                }
+            }
+
+            // Перевірка, чи не став кошик порожнім після видалення
+            function checkEmpty() {
+                if ($('#cart-table-body tr').length === 0) {
+                    location.reload();
+                }
+            }
+        });
+    </script>
+}

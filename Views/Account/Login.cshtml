@@ -1,0 +1,68 @@
+﻿@model Restaurant.Models.LoginModel
+
+@{
+    ViewData["Title"] = "Вхід";
+}
+
+<div class="container mt-5 page-transition">
+    <div class="premium-card p-5 shadow-sm mx-auto" style="max-width: 450px; border-radius: 30px; background: #fff; border: 1px solid rgba(0,0,0,0.05);">
+
+        <h2 class="fw-bold text-center mb-4" style="color: #2d3436; letter-spacing: -0.5px;">
+            Вхід на <span style="color: #ffb142;">сайт</span>
+        </h2>
+
+        <hr class="mb-4" style="opacity: 0.1;">
+
+        <form asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
+            <div class="text-danger small mb-3" asp-validation-summary="ModelOnly"></div>
+
+            @* Логін *@
+            <div class="form-group mb-4">
+                <label asp-for="Login" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Логін</label>
+                <input type="text" asp-for="Login" class="form-control form-control-lg rounded-pill px-4"
+                       style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;" placeholder="Введіть логін" />
+                <span asp-validation-for="Login" class="text-danger small ms-3"></span>
+            </div>
+
+            @* Пароль *@
+            <div class="form-group mb-5">
+                <label asp-for="Password" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Пароль</label>
+                <input type="password" asp-for="Password" class="form-control form-control-lg rounded-pill px-4"
+                       style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;" placeholder="••••••••" />
+                <span asp-validation-for="Password" class="text-danger small ms-3"></span>
+            </div>
+
+            @* Кнопка Увійти *@
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm text-white"
+                        style="background-color: #ffb142; border: none; padding: 12px;">
+                    Увійти
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .page-transition {
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-control:focus {
+        border-color: #ffb142 !important;
+        box-shadow: 0 0 0 0.25rem rgba(255, 177, 66, 0.1) !important;
+        background-color: #fff !important;
+    }
+</style>

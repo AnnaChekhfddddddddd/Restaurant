@@ -1,0 +1,192 @@
+﻿/* Підключаємо сучасний красивий шрифт */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Глобальні змінні кольорів */
+:root {
+    --primary: #ff9f43; /* Теплий ресторанний колір (апельсин/золото) */
+    --primary-hover: #e67e22;
+    --bg-light: #f8f9fa;
+    --text-dark: #2d3436;
+    --card-bg: #ffffff;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    overflow-x: hidden; /* Прибираємо горизонтальний скрол всієї сторінки */
+}
+
+/* 1. Анімація плавної появи сторінок */
+.page-transition {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 2. Преміум-шапка (Світла, з розмиттям і тінью) */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 15px 0;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--primary) !important;
+    font-size: 1.6rem;
+    letter-spacing: 0.5px;
+}
+
+/* Красивий ефект підкреслення меню при наведенні */
+.nav-link {
+    font-weight: 500;
+    color: #636e72 !important;
+    position: relative;
+    padding: 8px 15px !important;
+    transition: color 0.3s ease;
+}
+
+    .nav-link:hover {
+        color: var(--primary) !important;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        background-color: var(--primary);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+        width: 80%;
+    }
+
+/* 3. Кнопки, які хочеться натискати */
+.btn-primary, .btn-success {
+    border: none;
+    border-radius: 30px; /* Круглі сучасні кнопки */
+    padding: 12px 28px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3);
+}
+
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 159, 67, 0.5);
+        color: white;
+    }
+
+/* 4. Поля вводу (Input) */
+.form-control {
+    border-radius: 12px;
+    border: 1px solid #dfe6e9;
+    padding: 14px 20px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fcfcfc;
+}
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.15);
+        background-color: #ffffff;
+    }
+
+/* 5. Універсальна картка для контенту (Форми, Меню) */
+.premium-card, .card {
+    background: var(--card-bg);
+    border-radius: 20px !important;
+    border: none !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+    .premium-card:hover, .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+    }
+
+/* --- Твій ідеальний горизонтальний скрол (БЕЗ СПРОЩЕНЬ) --- */
+.category-scroll-container {
+    width: 100%;
+    overflow-x: auto; /* Дозволяє крутити вбік */
+    overflow-y: hidden;
+    white-space: nowrap; /* КАТЕГОРИЧНО: все в один рядок */
+    padding: 20px 0;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE */
+    -webkit-overflow-scrolling: touch;
+}
+
+    .category-scroll-container::-webkit-scrollbar {
+        display: none; /* Ховаємо смугу прокрутки */
+    }
+
+.category-scroll-wrapper {
+    display: inline-flex;
+    gap: 12px;
+    padding: 0 20px;
+}
+
+/* Кнопки категорій зберігають твій Premium стиль */
+.category-item {
+    display: inline-block;
+    flex-shrink: 0;
+    border-radius: 50px;
+    padding: 10px 24px;
+    background-color: var(--card-bg);
+    color: var(--text-dark);
+    border: 1px solid #dfe6e9;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+    .category-item:hover, .category-item.active {
+        background-color: var(--primary) !important;
+        color: white !important;
+        border-color: var(--primary) !important;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 159, 67, 0.4);
+    }
+
+/* Додатково: Стиль для Sold Out (з твого коду) */
+.sold-out-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.3);
+    pointer-events: none;
+    z-index: 2;
+}

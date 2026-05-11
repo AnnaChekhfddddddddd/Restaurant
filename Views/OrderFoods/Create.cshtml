@@ -1,0 +1,40 @@
+﻿@model Restaurant.Models.OrderFood
+
+@{
+    ViewData["Title"] = "Додати страву";
+}
+
+<h4>Додати страву до замовлення</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* Приховане поле для ID замовлення, щоб ми знали, куди додаємо страву *@
+            <input type="hidden" asp-for="OrderID" value="@ViewBag.OrderID" />
+
+            <div class="form-group mb-3">
+                <label asp-for="FoodID" class="control-label">Оберіть страву</label>
+                <select asp-for="FoodID" class="form-control" asp-items="ViewBag.FoodID"></select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Quantity" class="control-label">Кількість</label>
+                <input asp-for="Quantity" class="form-control" type="number" min="1" value="1" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Додати" class="btn btn-success" />
+                <a asp-controller="Orders" asp-action="Details" asp-route-id="@ViewBag.OrderID" class="btn btn-secondary">Скасувати</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

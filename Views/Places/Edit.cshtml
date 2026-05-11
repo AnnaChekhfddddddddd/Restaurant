@@ -1,0 +1,49 @@
+﻿@model Restaurant.Models.Place
+
+@{
+    ViewData["Title"] = "Редагувати столик";
+}
+
+<h2 class="mt-4">Редагувати столик</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        @* Трохи збільшив колонку з 5 до 6 *@
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+
+            @* Поле для назви столика *@
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label fw-bold">Назва столика</label>
+                <input asp-for="Name" class="form-control" placeholder="Наприклад: Столик №1" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            @* ВИБІР ОФІЦІАНТА *@
+            <div class="form-group mb-4">
+                <label asp-for="WaiterID" class="control-label fw-bold">Закріплений офіціант</label>
+                @* Додав стилі inline, щоб гарантовано розширити список *@
+                <select asp-for="WaiterID" class="form-select form-control"
+                        asp-items="ViewBag.WaiterID"
+                        style="min-width: 300px; height: 45px; padding: 5px 15px;">
+                    <option value="">-- Оберіть офіціанта --</option>
+                </select>
+                <span asp-validation-for="WaiterID" class="text-danger"></span>
+                <small class="text-muted d-block mt-1">Цей офіціант буде призначатися на замовлення за цим столом.</small>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Зберегти зміни" class="btn btn-success px-4 shadow-sm" />
+                <a asp-action="Index" class="btn btn-outline-secondary ms-2">Назад до списку</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

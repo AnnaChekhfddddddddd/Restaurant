@@ -1,0 +1,91 @@
+﻿@model Restaurant.Models.Food
+
+<div class="container mt-5 page-transition">
+    <div class="premium-card p-5 shadow-sm mx-auto" style="max-width: 800px; border-radius: 30px; background: #fff; border: 1px solid rgba(0,0,0,0.05);">
+
+        <h2 class="fw-bold mb-4" style="color: #2d3436; letter-spacing: -0.5px;">
+            Редагування: <span style="color: #ffb142;">@Model.Name</span>
+        </h2>
+
+        <hr class="mb-4" style="opacity: 0.1;">
+
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+            @* ВИПРАВЛЕНО: Тепер використовуємо ID, як у моделі *@
+            <input type="hidden" asp-for="ID" />
+
+            @* Назва страви *@
+            <div class="form-group mb-4">
+                <label asp-for="Name" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Назва страви</label>
+                <input asp-for="Name" class="form-control form-control-lg rounded-pill px-4"
+                       style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;" />
+                <span asp-validation-for="Name" class="text-danger small ms-3"></span>
+            </div>
+
+            <div class="row">
+                @* Категорія (FoodTypeID) *@
+                <div class="col-md-6">
+                    <div class="form-group mb-4">
+                        <label asp-for="FoodTypeID" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Категорія</label>
+                        <select asp-for="FoodTypeID" class="form-select form-select-lg rounded-pill px-4"
+                                asp-items="ViewBag.FoodTypeID" style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;"></select>
+                    </div>
+                </div>
+
+                @* Ціна *@
+                <div class="col-md-6">
+                    <div class="form-group mb-4">
+                        <label asp-for="Price" class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Ціна (грн)</label>
+                        <input asp-for="Price" class="form-control form-control-lg rounded-pill px-4"
+                               style="border-color: #f1f1f1; font-size: 1rem; background-color: #fafafa;" />
+                        <span asp-validation-for="Price" class="text-danger small ms-3"></span>
+                    </div>
+                </div>
+            </div>
+
+            @* Фото *@
+            <div class="form-group mb-5">
+                <label class="form-label fw-bold mb-2 ms-2" style="color: #636e72;">Змінити фото страви</label>
+                @* Додано h-auto та py-2 для збільшення висоти та ms-2 для внутрішнього відступу тексту кнопки *@
+                <input type="file" name="imageFile" class="form-control rounded-pill px-4 py-2"
+                       style="border-color: #f1f1f1; background-color: #fafafa; min-height: 50px; line-height: 2.2;" />
+            </div>
+
+            @* Кнопки *@
+            <div class="d-flex gap-3">
+                <button type="submit" class="btn btn-warning btn-lg rounded-pill px-5 fw-bold shadow-sm text-white"
+                        style="background-color: #ffb142; border: none;">
+                    Зберегти
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-lg rounded-pill px-5 fw-bold">
+                    Назад
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .page-transition {
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #ffb142 !important;
+        box-shadow: 0 0 0 0.25rem rgba(255, 177, 66, 0.1) !important;
+        background-color: #fff !important;
+    }
+</style>

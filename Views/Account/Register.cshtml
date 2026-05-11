@@ -1,0 +1,84 @@
+﻿@model Restaurant.Models.RegisterModel
+
+@{
+    ViewData["Title"] = "Реєстрація";
+}
+
+<style>
+    .premium-card {
+        border-radius: 20px;
+        border: none;
+    }
+
+    .form-control-custom {
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .file-upload-input {
+        padding: 10px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        width: 100%;
+    }
+
+    .btn-reg {
+        border-radius: 50px;
+        padding: 12px;
+        transition: 0.3s;
+    }
+
+        .btn-reg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        }
+</style>
+
+<div class="row justify-content-center mt-4 page-transition">
+    <div class="col-md-5">
+        <div class="premium-card p-4 shadow-lg bg-white">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" style="color: #ffc107;">Створити акаунт</h2>
+                <p class="text-muted">Приєднуйтесь до "Гурман"</p>
+            </div>
+
+            @* enctype обов'язковий для завантаження фото *@
+            <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
+                <div class="text-danger mb-3" asp-validation-summary="All"></div>
+
+                @* Це поле гарантує, що новий користувач стане Клієнтом (ID 3) *@
+                <input type="hidden" name="RoleID" value="3" />
+
+                <div class="mb-3">
+                    <label asp-for="Login" class="form-label fw-bold">Логін</label>
+                    <input asp-for="Login" class="form-control form-control-custom" placeholder="Ваш логін" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label fw-bold">Пароль</label>
+                    <input type="password" asp-for="Password" class="form-control form-control-custom" placeholder="••••••••" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label fw-bold">Повторіть пароль</label>
+                    <input type="password" asp-for="ConfirmPassword" class="form-control form-control-custom" placeholder="••••••••" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Аватар (необов'язково)</label>
+                    <input type="file" name="file" class="file-upload-input" />
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-warning btn-lg btn-reg fw-bold shadow-sm">Зареєструватися</button>
+                </div>
+            </form>
+
+            <div class="text-center mt-4">
+                <span class="text-muted">Вже маєте акаунт?</span>
+                <a asp-controller="Account" asp-action="Login" class="text-decoration-none fw-bold text-warning">Увійти</a>
+            </div>
+        </div>
+    </div>
+</div>

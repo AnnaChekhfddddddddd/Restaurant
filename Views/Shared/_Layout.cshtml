@@ -1,0 +1,113 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Restaurant.Extensions
+@using Restaurant.Models
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var cart = HttpContextAccessor.HttpContext.Session.GetJson<List<CartItem>>("Cart");
+    var count = cart?.Sum(x => x.Quantity) ?? 0;
+}
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Restaurant</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-white shadow-sm p-0" style="height: 70px;">
+            <div class="container-fluid d-flex align-items-center h-100 position-relative">
+
+                @* Логотип та Меню *@
+                <div class="d-flex align-items-center" style="position: absolute; left: 20px; z-index: 10000;">
+                    <a asp-controller="Foods" asp-action="Index"
+                       class="nav-link d-flex align-items-center p-0 text-dark"
+                       style="font-size: 1.5rem; font-weight: 800; cursor: pointer; text-decoration: none;">
+                        <i class="fa-solid fa-bars me-2"></i>
+                        <span style="letter-spacing: 1px;">МЕНЮ</span>
+                    </a>
+
+                    <a class="navbar-brand fw-bold text-warning d-flex align-items-center m-0 ms-4"
+                       asp-controller="Home" asp-action="Index"
+                       style="font-size: 1.6rem;">
+                        <i class="fa-solid fa-utensils me-2"></i>
+                        <span>Гурман</span>
+                    </a>
+                </div>
+
+                <div style="flex-grow: 1;"></div>
+
+                @* Права частина: Акаунт та Кошик *@
+                <div class="d-flex align-items-center pe-3">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="d-none d-lg-flex align-items-center gap-3 me-3">
+                            @if (User.IsInRole("Менеджер"))
+                            {
+                                <a class="nav-link fw-bold text-dark" asp-controller="Users" asp-action="Staff">Персонал</a>
+                                @* ДОДАНО ПОСИЛАННЯ НА СТОЛИКИ СЮДИ *@
+                                <a class="nav-link fw-bold text-dark" asp-controller="Places" asp-action="Index">Столики</a>
+                            }
+
+                            @if (!User.IsInRole("Клієнт"))
+                            {
+                                <a class="nav-link fw-bold text-dark" asp-controller="Orders" asp-action="Index">Замовлення</a>
+                            }
+
+                            @if (User.IsInRole("Клієнт"))
+                            {
+                                <a class="nav-link fw-bold text-dark" asp-controller="Cart" asp-action="MyOrders">
+                                    <i class="fa-solid fa-clock-rotate-left me-1"></i> Мої замовлення
+                                </a>
+                            }
+
+                            <a class="nav-link fw-bold text-dark" asp-controller="Account" asp-action="Profile">Профіль</a>
+                        </div>
+
+                        <a class="btn btn-outline-danger btn-sm rounded-pill px-3 me-3" asp-controller="Account" asp-action="Logout">Вийти</a>
+
+                        @if (!User.IsInRole("Менеджер"))
+                        {
+                            <a class="nav-link position-relative p-0" asp-controller="Cart" asp-action="Index">
+                                <i class="fa-solid fa-cart-shopping fa-xl" style="color: #2d3436;"></i>
+                                <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger @(count == 0 ? "d-none" : "")" style="font-size: 0.7rem;">
+                                    @count
+                                </span>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <a class="nav-link fw-bold text-dark me-3" asp-controller="Account" asp-action="Login">Увійти</a>
+                        <a class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm" style="background-color: #ffb142; border: none; color: #fff;" asp-controller="Account" asp-action="Register">Реєстрація</a>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    @* Відступ для контенту *@
+    <div style="margin-top: 90px;"></div>
+
+    <main role="main" class="container flex-grow-1">
+        @RenderBody()
+    </main>
+
+    <footer class="footer py-4 bg-dark text-white mt-5">
+        <div class="container-fluid text-center">
+            <span>&copy; @DateTime.Now.Year - Система автоматизації ресторану</span>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

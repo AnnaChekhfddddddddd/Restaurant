@@ -1,0 +1,43 @@
+﻿@model Restaurant.Models.User
+
+@{
+    ViewData["Title"] = "Мій профіль";
+}
+
+<div class="container mt-5">
+    <h2>Мій профіль</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="@(string.IsNullOrEmpty(Model.Avatar) ? "/img/client_avatar.png" : Model.Avatar)"
+                 class="img-thumbnail" style="max-width: 200px;" alt="Аватар" />
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+                <tr>
+                    <th>Логін:</th>
+                    <td>@Model.Login</td>
+                </tr>
+                <tr>
+                    <th>Ім'я:</th>
+                    <td>@Model.FirstName</td>
+                </tr>
+                <tr>
+                    <th>Прізвище:</th>
+                </tr>
+                <tr>
+                    <th>Телефон:</th>
+                    <td>@Model.Phone</td>
+                </tr>
+                <tr>
+                    <th>Роль:</th>
+                    <td>@(Model.Role?.Name ?? "Клієнт")</td>
+                </tr>
+            </table>
+
+            <div class="mt-3">
+                <a asp-controller="Account" asp-action="Edit" class="btn btn-primary">Редагувати профіль</a>
+            </div>
+        </div>
+    </div>
+</div>

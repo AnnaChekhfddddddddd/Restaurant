@@ -1,0 +1,36 @@
+﻿@model Restaurant.Models.OrderFood
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+
+<div>
+    
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Замовлення
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Order.ID)
+        </dd>
+        <dt class = "col-sm-2">
+            Блюдо
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Food.ID)
+        </dd>
+        <dt class = "col-sm-2">
+            Кількість
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+    </dl>
+</div>
+<div>
+    
+    
+</div>

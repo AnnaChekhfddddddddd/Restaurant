@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Restaurant.Models.User>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+@if(User.Identity.IsAuthenticated){
+
+    if(User.IsInRole("Менеджер"))
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <p>
+                    <a class="btn btn-outline-primary" asp-action="Create">Додати</a>
+                </p>
+            </div>
+        </div>
+    }
+}
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                Аватар
+            </th>
+            <th>
+                ПІБ
+            </th>
+            <th>
+                Телефон
+            </th>
+            <th>
+                Тип
+            </th>           
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <img src="@item.Avatar" alt="avatar" width="150px;"/>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ID">@Html.DisplayFor(modelItem => item.LastName) @Html.DisplayFor(modelItem => item.FirstName)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role.Name)
+            </td>
+            
+        </tr>
+    }
+    </tbody>
+</table>

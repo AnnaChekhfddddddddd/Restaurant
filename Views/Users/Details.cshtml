@@ -1,0 +1,162 @@
+﻿@model Restaurant.Models.User
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Аватар
+        </dt>
+        <dd class="col-sm-10">
+            <img src="@Model.Avatar" alt="avatar" width="150px;" />
+        </dd>
+        @if (ViewBag.My == true)
+        {
+            <dt class="col-sm-2">
+                Логін
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Login)
+            </dd>
+            <dt class="col-sm-2">
+                Пароль
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Password)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            Ім'я
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            Прізвище
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            Телефон
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt class="col-sm-2">
+            Роль
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Role.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (ViewBag.My || User.IsInRole("Менеджер"))
+    {
+        <p>
+            <a asp-action="Edit" asp-route-id="@Model.ID">Редагувати</a>
+        </p>
+    }
+</div>
+
+@*@if(Model.Services.Count() > 0)
+{
+    <h5>Мої послуги</h5>
+    <table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th>
+                Юрист
+            </th>
+            <th>
+                Клієнт
+            </th>
+            <th>
+                Дата початку
+            </th>
+            <th>
+                Дата завершення
+            </th>
+            <th>
+                Статус
+            </th>
+            <th>
+                Тип послуги
+            </th>
+            <th>
+                Опис
+            </th>
+            <th>
+                Вартість
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Services) {
+        <tr>
+            @if(item.Lawyer == null){
+                <td>
+                    @Html.Raw("-")
+                </td>
+            }
+            else{
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lawyer.FullName)
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.Client.FullName)
+            </td>
+            @if(item.StartDate == null){
+                <td>
+                    @Html.Raw("-")
+                </td>
+            }
+            else{
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+            }
+            @if(item.EndDate == null){
+                <td>
+                    @Html.Raw("-")
+                </td>
+            }
+            else{
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.Status.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceType.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            @if(item.Price == null){
+                <td>
+                    @Html.Raw("-")
+                </td>
+            }
+            else{
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+            }
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ID">Інформація</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+}*@

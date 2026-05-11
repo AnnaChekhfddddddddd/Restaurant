@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Restaurant.Models.Status>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<p>
+    <a asp-action="Create">Додати</a>
+</p>
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th>
+                Назва
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Редагувати</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Інформація</a> 
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

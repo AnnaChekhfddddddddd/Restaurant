@@ -1,0 +1,112 @@
+﻿@model Restaurant.Models.Order
+
+@{
+    ViewData["Title"] = "Деталі замовлення";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Замовлення № @Model.ID</h2>
+        <a asp-action="Index" class="btn btn-secondary btn-sm">Назад до списку</a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3 p-4">
+        <dl class="row">
+            <dt class="col-sm-3 text-muted">Клієнт</dt>
+            <dd class="col-sm-9 fw-bold">@Model.Client?.FullName</dd>
+
+            @if (Model.Waiter != null)
+            {
+                <dt class="col-sm-3 text-muted">Офіціант</dt>
+                <dd class="col-sm-9">@Model.Waiter.FullName</dd>
+            }
+
+            <dt class="col-sm-3 text-muted">Статус</dt>
+            <dd class="col-sm-9">
+                <span class="badge @(Model.Status?.Name == "Завершений" ? "bg-success" : "bg-warning text-dark")">
+                    @(Model.Status?.Name ?? "Оброблено")
+                </span>
+            </dd>
+
+            <dt class="col-sm-3 text-muted">Столик</dt>
+            <dd class="col-sm-9">@(Model.Place?.Name ?? "Не вказано")</dd>
+
+            <dt class="col-sm-3 text-muted">Загальна ціна</dt>
+            <dd class="col-sm-9 text-success fw-bold">@Model.Price грн</dd>
+
+            <dt class="col-sm-3 text-muted">Дата замовлення</dt>
+            <dd class="col-sm-9">@Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</dd>
+        </dl>
+    </div>
+
+    <div class="mt-4">
+        @if (User.Identity.IsAuthenticated)
+        {
+            if (User.IsInRole("Клієнт") && Model.Status?.Name == "Відкритий")
+            {
+                <div class="d-flex gap-2 mb-3">
+                    <a asp-controller="OrderFoods" asp-action="Create" asp-route-id="@Model.ID" class="btn btn-primary">
+                        <i class="fa-solid fa-plus me-1"></i> Додати страву
+                    </a>
+                    <a asp-controller="Orders" asp-action="ToActive" asp-route-id="@Model.ID" class="btn btn-outline-primary">
+                        Покликати офіціанта
+                    </a>
+                </div>
+            }
+
+            if (User.IsInRole("Офіціант") && Model.Status?.Name == "Активний")
+            {
+                <div class="mb-3">
+                    <a asp-controller="Orders" asp-action="Finish" asp-route-id="@Model.ID" class="btn btn-success">
+                        Завершити замовлення
+                    </a>
+                </div>
+            }
+        }
+    </div>
+
+    @if (Model.OrderFoods != null && Model.OrderFoods.Any())
+    {
+        <h4 class="mt-5 mb-3">Склад замовлення</h4>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Назва страви</th>
+                        <th class="text-center">Кількість</th>
+                        <th class="text-end">Ціна за порцію</th>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Клієнт"))
+                        {
+                            <th class="text-end">Дії</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderFoods)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="Foods" asp-action="Details" asp-route-id="@item.FoodID" class="text-decoration-none fw-bold text-dark">
+                                    @(item.Food?.Name ?? "Страва")
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                @* ОСЬ ТУТ БУЛА ПОМИЛКА: Використовуємо Quantity замість Price *@
+                                <span class="badge bg-secondary">@item.Quantity</span>
+                            </td>
+                            <td class="text-end">@(item.Food?.Price ?? 0) грн</td>
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("Клієнт") && Model.Status?.Name == "Відкритий")
+                            {
+                                <td class="text-end">
+                                    <a asp-controller="OrderFoods" asp-action="Delete" asp-route-id="@item.ID" class="btn btn-sm btn-outline-danger">
+                                        Видалити
+                                    </a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
